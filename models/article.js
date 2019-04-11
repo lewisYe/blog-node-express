@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const blogSchema = mongoose.Schema({
-  title: String,
+const articleSchema = mongoose.Schema({
+  name: String,
   content: String,
   tags: Array,
-  isPublish:Boolean,
+  isPublish:{ type: Boolean, default: false },
   createTime: { type: Date, default: Date.now },
   updateTime: { type: Date, default: Date.now },
 })
 
-module.exports = mongoose.model('Blog',blogSchema);
+module.exports = mongoose.model('Article',articleSchema);
