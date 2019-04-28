@@ -4,7 +4,7 @@ const articleSchema = mongoose.Schema({
   name: String,
   content: String,
   tags: Array,
-  isPublish:{ type: Boolean, default: false },
+  status:{ type: Number, default: 0 },
   createTime: { type: Date, default: Date.now },
   updateTime: { type: Date, default: Date.now },
 })

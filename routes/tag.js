@@ -1,25 +1,24 @@
 var express = require('express');
 var router = express.Router();
-const Article = require('../models/article')
+const Tag = require('../models/tag')
 
-/* GET users listing. */
+/* GET home page. */
 router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
+  res.render('index', { title: 'Express' });
 });
 
+// get tag list
+
 router.get('/list', (req, res) => {
-  let { pageNo, pageSize } = req;
-  Article.count({}, (err, count) => {
-    Article.find({})
+  Tag.count({}, (err, count) => {
+    Tag.find({})
       .sort({ createTime: -1 })
-      .limit(pageSize)
-      .skip((pageNo - 1) * pageSize)
-      .then(movies => {
-        res.json( {
+      .then(tags => {
+        res.json({
           code: 200,
           message: 'success',
           data: {
-            list: movies,
+            list: tags,
             total: count
           }
         })
@@ -32,21 +31,21 @@ router.get('/list', (req, res) => {
 })
 
 router.post('/create', function (req, res, next) {
-  Article.create(req.body, (err, article) => {
+  Tag.create(req.body, (err, tag) => {
     if (err) {
       res.json(err)
     } else {
-      res.json( {
+      res.json({
         code: 200,
         message: 'success',
-        data: article
+        data: {}
       })
     }
   })
 });
 
 router.post('/delete', function (req, res, next) {
-  Article.findByIdAndRemove(req.body.id, {}, (err, result) => {
+  Tag.findByIdAndRemove(req.body.id, {}, (err, result) => {
     if (err) {
       res.json(err)
     } else {
