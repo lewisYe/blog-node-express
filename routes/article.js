@@ -14,8 +14,9 @@ router.get('/list', (req, res) => {
       .sort({ createTime: -1 })
       .limit(pageSize)
       .skip((pageNo - 1) * pageSize)
+      .populate('tags')
       .then(movies => {
-        res.json( {
+        res.json({
           code: 200,
           message: 'success',
           data: {
@@ -31,12 +32,28 @@ router.get('/list', (req, res) => {
 
 })
 
+router.get('/detail', (req, res) => {
+  let { id } = req;
+  Article.findOne({id})
+    .then(movies => {
+      console.log(movies)
+      res.json({
+        code: 200,
+        message: 'success',
+        data: movies
+      })
+    })
+    .catch(err => {
+      res.json(err)
+    })
+})
+
 router.post('/create', function (req, res, next) {
   Article.create(req.body, (err, article) => {
     if (err) {
       res.json(err)
     } else {
-      res.json( {
+      res.json({
         code: 200,
         message: 'success',
         data: article
@@ -57,6 +74,42 @@ router.post('/delete', function (req, res, next) {
       })
     }
   })
+})
+
+router.post('/release', function (req, res, next) {
+  Article.findOneAndUpdate(
+    { "_id": req.body.id },
+    { $set: { status: req.body.status } },
+    { new: true },
+    (err, result) => {
+      if (err) {
+        res.json(err)
+      } else {
+        res.json({
+          code: 200,
+          message: 'success',
+          data: {}
+        })
+      }
+    })
+})
+
+router.post('/edit', function (req, res, next) {
+  Article.findOneAndUpdate(
+    { "_id": req.body.id },
+    { ...req.body },
+    { new: true },
+    (err, result) => {
+      if (err) {
+        res.json(err)
+      } else {
+        res.json({
+          code: 200,
+          message: 'success',
+          data: {}
+        })
+      }
+    })
 })
 
 module.exports = router;
